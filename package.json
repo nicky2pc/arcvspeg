@@ -1,0 +1,51 @@
+{
+  "name": "arc-kill-the-peg",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Arc: Kill the Peg - Onchain arcade game on Arc blockchain",
+  "dependencies": {
+    "@privy-io/react-auth": "^2.6.0",
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^27.5.2",
+    "buffer": "^6.0.3",
+    "ethers": "^6.16.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "viem": "^2.21.55",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.46",
+    "@types/react": "^18.3.21",
+    "@types/react-dom": "^18.3.7",
+    "@vitejs/plugin-react": "^4.4.1",
+    "rollup-plugin-node-polyfills": "^0.2.1",
+    "typescript": "^5.0.4",
+    "vite": "^6.3.5"
+  }
+}

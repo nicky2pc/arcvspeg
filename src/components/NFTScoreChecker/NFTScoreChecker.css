@@ -1,0 +1,317 @@
+/* NFTScoreCheckerModal.css - Arc themed version */
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+  }
+
+  .modal-content {
+    background: #1b1b1b;
+    border: 2px solid #00D4FF;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 25px;
+    border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+  }
+
+  .modal-title {
+    margin: 0;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #00D4FF;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+  }
+
+  /* Close button with rotation on hover */
+  .close-button {
+    width: 40px;
+    height: 40px;
+    border: 2px solid #00D4FF;
+    border-radius: 50%;
+    background: transparent;
+    color: #00D4FF;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
+
+    /* Perfect centering */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* Fixed size */
+    flex-shrink: 0;
+  }
+
+  .close-button:hover {
+    background: #00D4FF;
+    color: #1b1b1b;
+    transform: rotate(90deg);
+  }
+
+  .modal-body {
+    padding: 25px;
+  }
+
+  .modal-description {
+    text-align: center;
+    color: rgba(0, 212, 255, 0.8);
+    font-family: 'Space Mono', monospace;
+    font-size: 16px;
+    margin-bottom: 25px;
+  }
+
+  .token-input {
+    width: 100%;
+    padding: 16px;
+    border: 2px solid rgba(0, 212, 255, 0.4);
+    border-radius: 12px;
+    background: rgba(27, 27, 27, 0.9);
+    color: #00D4FF;
+    font-family: 'Space Mono', monospace;
+    font-size: 18px;
+    text-align: center;
+    box-sizing: border-box;
+  }
+
+  .token-input:focus {
+    outline: none;
+    border-color: #00D4FF;
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+  }
+
+  .token-input::placeholder {
+    color: rgba(0, 212, 255, 0.5);
+  }
+
+  .button-section {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin: 20px 0;
+  }
+
+  .check-button,
+  .clear-button {
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+    max-width: 200px;
+  }
+
+  .check-button {
+    background: #00D4FF;
+    color: #1b1b1b;
+    border: none;
+  }
+
+  .check-button:hover:not(:disabled) {
+    background: #0099CC;
+    transform: translateY(-2px);
+  }
+
+  .clear-button {
+    background: transparent;
+    color: #00D4FF;
+    border: 2px solid #00D4FF;
+  }
+
+  .clear-button:hover:not(:disabled) {
+    background: rgba(0, 212, 255, 0.15);
+  }
+
+  .check-button:disabled,
+  .clear-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .result-container {
+    margin: 25px 0;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+  }
+
+  .result-container.success {
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+  }
+
+  .result-container.error {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+  }
+
+  .result-message {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 15px;
+  }
+
+  .result-container.success .result-message {
+    color: #22c55e;
+  }
+
+  .result-container.error .result-message {
+    color: #ef4444;
+  }
+
+  .score-display {
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(0, 212, 255, 0.3);
+    border-radius: 12px;
+  }
+
+  .nft-image-preview {
+    width: 160px;
+    height: 160px;
+    margin: 0 auto 20px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 3px solid rgba(0, 212, 255, 0.5);
+  }
+
+  .nft-image-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .score-value {
+    margin: 20px 0;
+  }
+
+  .score-label {
+    display: block;
+    color: rgba(0, 212, 255, 0.9);
+    font-family: 'Space Mono', monospace;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+  }
+
+  .score-number {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 48px;
+    font-weight: 900;
+    color: #22c55e;
+  }
+
+  .nft-info {
+    margin-top: 15px;
+    font-family: 'Space Mono', monospace;
+    color: rgba(0, 212, 255, 0.8);
+    font-size: 14px;
+  }
+
+  .nft-id {
+    display: inline-block;
+    padding: 8px 16px;
+    background: rgba(0, 212, 255, 0.1);
+    border-radius: 20px;
+    margin-bottom: 8px;
+  }
+
+  .owner-info {
+    margin-top: 8px;
+    color: rgba(0, 212, 255, 0.7);
+  }
+
+  .info-section {
+    margin-top: 25px;
+    padding: 18px;
+    background: rgba(0, 212, 255, 0.05);
+    border-radius: 10px;
+    border-left: 4px solid #00D4FF;
+  }
+
+  .info-section h4 {
+    margin: 0 0 12px;
+    color: #00D4FF;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 17px;
+  }
+
+  .info-section ul {
+    margin: 0;
+    padding-left: 18px;
+    color: rgba(0, 212, 255, 0.8);
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .modal-footer {
+    padding: 20px 25px;
+    text-align: center;
+    border-top: 1px solid rgba(0, 212, 255, 0.2);
+  }
+
+  .close-modal-btn {
+    padding: 12px 28px;
+    background: transparent;
+    color: #00D4FF;
+    border: 2px solid #00D4FF;
+    border-radius: 25px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .close-modal-btn:hover {
+    background: rgba(0, 212, 255, 0.1);
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .button-section {
+      flex-direction: column;
+    }
+
+    .check-button,
+    .clear-button {
+      max-width: none;
+    }
+
+    .nft-image-preview {
+      width: 140px;
+      height: 140px;
+    }
+
+    .score-number {
+      font-size: 40px;
+    }
+  }

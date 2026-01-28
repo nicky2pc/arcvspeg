@@ -29,7 +29,7 @@ const NFTScoreCheckerModal: React.FC<NFTScoreCheckerModalProps> = ({
   const [result, setResult] = useState<{ success: boolean; message: string; score?: number; owner?: string } | null>(null);
   const { wallets } = useWallets();
 
-  const NFT_IMAGE_URL = 'https://ipfs.io/ipfs/bafkreicdqmt5zw6yhm3g4ugj3gqfs5jh562qydyzfeevycrjky5sah7ske';
+  const NFT_IMAGE_URL = 'https://ipfs.io/ipfs/bafybeibp4angkcrdleql6delf6yq3w7e6nan6ozs6aueky4kesxsqbdb7a';
 
   // Auto-fill tokenId if provided
   useEffect(() => {

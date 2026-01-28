@@ -457,21 +457,7 @@ p {
 
 .shop-button {
   left: auto;
-  right: 150px;
-}
-
-.balance-container {
-  position: absolute;
-  top: 10px;
-  left: 160px;
-  padding: 8px 16px;
-  background: rgba(0, 212, 255, 0.15);
-  font-weight: 700;
-  color: var(--arc-primary);
-  border-radius: 32px;
-  border: 1px solid rgba(0, 212, 255, 0.3);
-  font-family: 'Space Mono', monospace;
-  transition: all 0.3s ease;
+  right: 170px;
 }
 
 .balance-container:hover {
@@ -486,7 +472,7 @@ p {
 .username-container {
   position: absolute;
   top: 10px;
-  left: 240px;
+  left: 250px;
   padding: 8px 16px;
   background: rgba(0, 212, 255, 0.15);
   font-weight: 700;
@@ -500,7 +486,7 @@ p {
 .balance-container {
   position: absolute;
   top: 10px;
-  left: 410px;
+  left: 450px;
   padding: 8px 16px;
   background: rgba(0, 212, 255, 0.15);
   font-weight: 700;

@@ -185,14 +185,15 @@ const Game = () => {
   };
 
   const loadAllAssets = async () => {
-    // Arc game enemies - crypto scam/failure projects
+    // Stablecoin enemies
     const enemies = [
-      "/chars/enemies/iron-enemy.png",      // Iron Finance / TITAN
-      "/chars/enemies/basis-enemy.png", // Basic Cash Bug
+      "/chars/enemies/dai-weapon.png",
+      "/chars/enemies/pyusd-weapon.png",
+      "/chars/enemies/usde-weapon.png",
+      "/chars/enemies/usdt-weapon.png",
     ];
-    const bosses = ["/chars/enemies/luna-enemy.png"]; // Terra Luna UST - The Boss
+    const bosses = ["/chars/enemies/luna-weapon.png"]; // Terra Luna - The Boss
     const players = ["/chars/arc.png"];
-
     await preloadImages([...enemies, ...bosses, ...players, weaponSrc]);
 
     const explosionFramesArr = await Promise.all(
@@ -309,7 +310,7 @@ const Game = () => {
         const spawnDelay = 150 + Math.random() * (430 - 150);
         setTimeout(() => {
           if (enemies.current.length < maxEnemiesAllowed) {
-            // 12% chance to spawn Terra Luna boss, otherwise random IRON or BASIC_CASH
+            // 12% chance to spawn Terra Luna boss
             const enemyType = Math.random() < 0.12 ? "terraLuna" : "default";
             const difficulty = Math.min(Math.floor(killCount / 10), 10);
             const adjustedDifficulty = enemyType === "terraLuna" ? difficulty * 10 : difficulty;
@@ -544,16 +545,19 @@ const Game = () => {
       deathParticles.current.push(...particles);
       
       enemies.current.splice(enemyIndex, 1);
-
+    
       setGameStat(prev => {
         const newKillCount = prev.killCount + 1;
-        // Terra Luna boss gives 5 points, other enemies give 1-2
+        // Terra Luna boss gives 5 points, stablecoins give 1-3
         const isBoss = enemy.type === "terraLuna";
-        const points = isBoss ? 5 : (enemy.type === "iron" ? 2 : 1);
+        const points = isBoss ? 5 : 
+                       (enemy.type === "usde" ? 3 : 
+                       (enemy.type === "dai" ? 2 : 
+                       (enemy.type === "usdt" ? 2 : 1)));
         killCountRef.current = newKillCount;
         totalScoreRef.current = prev.totalScore + points;
         spawnEnemies(newKillCount);
-
+    
         return {
           ...prev,
           totalScore: prev.totalScore + points,
@@ -561,17 +565,19 @@ const Game = () => {
           bossesKilled: isBoss ? prev.bossesKilled + 1 : prev.bossesKilled
         };
       });
+      
       // Log kill for analytics
       setTimeout(() => {
         const totalScore = totalScoreRef.current;
-        // Track enemy type: TERRA_LUNA (boss), IRON, BASIC_CASH
+        // Track enemy type: TERRA_LUNA (boss), DAI, PYUSD, USDE, USDT
         const enemyLabel = enemy.type === "terraLuna" ? "TERRA_LUNA" :
-                          enemy.type === "iron" ? "IRON" : "BASIC_CASH";
+                          enemy.type === "dai" ? "DAI" :
+                          enemy.type === "pyusd" ? "PYUSD" :
+                          enemy.type === "usde" ? "USDE" : "USDT";
         console.log(`Killed ${enemyLabel}, total score: ${totalScore}`);
       }, 0); 
-
+    
       audioPool.current = playRandomSound(sounds, "kill", isSoundOn.current, audioPool.current, volumeRef.current);
-      //here
     };
 
     const updateGameState = () => {

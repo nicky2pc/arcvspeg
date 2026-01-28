@@ -56,7 +56,7 @@ export const loadContractAddresses = () => {
 loadContractAddresses();
 
 // NFT metadata IPFS URI
-const TOKEN_URI = 'ipfs://bafkreicdqmt5zw6yhm3g4ugj3gqfs5jh562qydyzfeevycrjky5sah7ske';
+const TOKEN_URI = 'ipfs://bafybeibp4angkcrdleql6delf6yq3w7e6nan6ozs6aueky4kesxsqbdb7a';
 
 // Generate UUID for validation
 function generateUUID(): string {

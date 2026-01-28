@@ -14,7 +14,7 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ transactions, cle
   const [selectedTokenId, setSelectedTokenId] = useState<number | undefined>();
 
   const CONTRACT_EXPLORER_URL = 'https://sepolia.etherscan.io/address/0x7e6114bAB8ADf97d88e028697a9D0CF11A6af9e0';
-  const NFT_IMAGE_URL = 'https://ipfs.io/ipfs/bafkreicdqmt5zw6yhm3g4ugj3gqfs5jh562qydyzfeevycrjky5sah7ske';
+  const NFT_IMAGE_URL = 'https://ipfs.io/ipfs/bafybeibp4angkcrdleql6delf6yq3w7e6nan6ozs6aueky4kesxsqbdb7a';
 
   const handleInteractiveLink = (e: React.MouseEvent<HTMLTableElement>) => {
     const target = e.target as HTMLElement;

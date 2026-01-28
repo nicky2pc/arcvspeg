@@ -3,24 +3,30 @@ import { Weapon } from "./classes/Weapon.ts";
 import { CONFIG } from "./config.ts";
 import { getImageFromCache } from "./imageCache.ts";
 
-// Enemy types based on crypto scam/failure projects
+// Enemy types - stablecoins
 export const ENEMY_TYPES = {
-  IRON: "iron",           // Iron Finance / TITAN collapse
-  BASIC_CASH: "basicCash", // Basic Cash algorithmic stablecoin failure
+  DAI: "dai",           // DAI stablecoin
+  PYUSD: "pyusd",       // PayPal USD
+  USDE: "usde",         // Ethena USDe
+  USDT: "usdt",         // Tether USDT
   TERRA_LUNA: "terraLuna"  // Terra Luna UST - the boss
 };
 
 const ENEMY_COLORS = {
-  [ENEMY_TYPES.IRON]: "#FFD700",       // Gold for Iron
-  [ENEMY_TYPES.BASIC_CASH]: "#8A2BE2", // Violet for Basic Cash
-  [ENEMY_TYPES.TERRA_LUNA]: "#DAA520"  // Dark golden yellow for Terra/Luna (better contrast)
+  [ENEMY_TYPES.DAI]: "#FFFF00",        // Yellow for DAI
+  [ENEMY_TYPES.PYUSD]: "#0000FF",      // Blue for PYUSD
+  [ENEMY_TYPES.USDE]: "#000000",       // Black for USDe
+  [ENEMY_TYPES.USDT]: "#00FF00",       // Green for USDT
+  [ENEMY_TYPES.TERRA_LUNA]: "#DAA520"  // Dark golden yellow for Terra/Luna
 };
 
 // Image paths for enemies
 const ENEMY_IMAGES = {
-  [ENEMY_TYPES.IRON]: "/chars/enemies/iron-enemy.png",
-  [ENEMY_TYPES.BASIC_CASH]: "/chars/enemies/basis-enemy.png",
-  [ENEMY_TYPES.TERRA_LUNA]: "/chars/enemies/luna-enemy.png"
+  [ENEMY_TYPES.DAI]: "/chars/enemies/dai-weapon.png",
+  [ENEMY_TYPES.PYUSD]: "/chars/enemies/pyusd-weapon.png",
+  [ENEMY_TYPES.USDE]: "/chars/enemies/usde-weapon.png",
+  [ENEMY_TYPES.USDT]: "/chars/enemies/usdt-weapon.png",
+  [ENEMY_TYPES.TERRA_LUNA]: "/chars/enemies/luna-weapon.png"
 };
 
 export default function createEnemy(
@@ -46,8 +52,9 @@ export default function createEnemy(
   if (type === "fire" || type === ENEMY_TYPES.TERRA_LUNA) {
     enemyType = ENEMY_TYPES.TERRA_LUNA; // Boss
   } else {
-    // Random between IRON and BASIC_CASH
-    enemyType = Math.random() < 0.5 ? ENEMY_TYPES.IRON : ENEMY_TYPES.BASIC_CASH;
+    // Random between DAI, PYUSD, USDE, USDT
+    const randomTypes = [ENEMY_TYPES.DAI, ENEMY_TYPES.PYUSD, ENEMY_TYPES.USDE, ENEMY_TYPES.USDT];
+    enemyType = randomTypes[Math.floor(Math.random() * randomTypes.length)];
   }
 
   // Stats based on enemy type
@@ -64,27 +71,43 @@ export default function createEnemy(
       moveSpeed = 4 * frameMultiplier;
       health = 8;
       break;
-    case ENEMY_TYPES.IRON:
-      // Iron Finance: medium speed, rust-colored bullets
-      const baseIronSpeed = (1.0 + Math.random() * 0.8) * frameMultiplier;
-      bulletSpeed = Math.min(baseIronSpeed * difficultyMultiplier, 3.5);
+    case ENEMY_TYPES.DAI:
+      // DAI: balanced stablecoin enemy
+      const baseDaiSpeed = (1.0 + Math.random() * 0.8) * frameMultiplier;
+      bulletSpeed = Math.min(baseDaiSpeed * difficultyMultiplier, 3.5);
       fireRate = Math.max(2200 / difficultyMultiplier, 900);
       moveSpeed = (0.4 + Math.random() * 0.3) * frameMultiplier * difficultyMultiplier;
       health = 2;
       break;
-    case ENEMY_TYPES.BASIC_CASH:
+    case ENEMY_TYPES.PYUSD:
+      // PYUSD: faster bullets, lower health
+      const basePyusdSpeed = (1.3 + Math.random() * 0.7) * frameMultiplier;
+      bulletSpeed = Math.min(basePyusdSpeed * difficultyMultiplier, 3.8);
+      fireRate = Math.max(2000 / difficultyMultiplier, 800);
+      moveSpeed = (0.5 + Math.random() * 0.4) * frameMultiplier * difficultyMultiplier;
+      health = 1;
+      break;
+    case ENEMY_TYPES.USDE:
+      // USDe: tanky but slow
+      const baseUsdeSpeed = (0.8 + Math.random() * 0.6) * frameMultiplier;
+      bulletSpeed = Math.min(baseUsdeSpeed * difficultyMultiplier, 3.0);
+      fireRate = Math.max(2500 / difficultyMultiplier, 1100);
+      moveSpeed = (0.3 + Math.random() * 0.3) * frameMultiplier * difficultyMultiplier;
+      health = 3;
+      break;
+    case ENEMY_TYPES.USDT:
     default:
-      // Basic Cash: erratic movement, lower damage
-      const baseBasicSpeed = (1.2 + Math.random() * 0.6) * frameMultiplier;
-      bulletSpeed = Math.min(baseBasicSpeed * difficultyMultiplier, 3);
+      // USDT: erratic movement, medium stats
+      const baseUsdtSpeed = (1.2 + Math.random() * 0.6) * frameMultiplier;
+      bulletSpeed = Math.min(baseUsdtSpeed * difficultyMultiplier, 3);
       fireRate = Math.max(2800 / difficultyMultiplier, 1000);
       moveSpeed = (0.5 + Math.random() * 0.5) * frameMultiplier * difficultyMultiplier;
-      health = 1;
+      health = 2;
       break;
   }
 
   // Get enemy image
-  const imageSrc = ENEMY_IMAGES[enemyType] || ENEMY_IMAGES[ENEMY_TYPES.BASIC_CASH];
+  const imageSrc = ENEMY_IMAGES[enemyType] || ENEMY_IMAGES[ENEMY_TYPES.DAI];
   let characterImage = getImageFromCache(imageSrc);
   if (!characterImage) {
     const img = new Image();
@@ -113,13 +136,17 @@ export default function createEnemy(
   enemy.health = health;
   enemy.maxHealth = health;
 
+  if (enemyType !== ENEMY_TYPES.TERRA_LUNA) {
+    enemy.width = enemy.width * 1.25;
+    enemy.height = enemy.height;
+  }
+
   // Assign weapon
   const weaponDamage = enemyType === ENEMY_TYPES.TERRA_LUNA ? 3 : 1;
   const weaponBulletSize = enemyType === ENEMY_TYPES.TERRA_LUNA ? 18 : 8;
   enemy.weapon = new Weapon(fireRate, weaponBulletSize, weaponDamage, bulletColor, weaponImage);
 
   enemiesRef.push(enemy);
-
   return enemiesRef;
 }
 

@@ -1097,7 +1097,10 @@ const Game = () => {
         {gameState === 'menu' && (
           <>
             <div className="bg">
-              <h1 className='total-score h1'>ARC: Kill the Peg <br /> Destroy the Scams</h1>
+            <h1 className='total-score h1'>
+              ARC Defence <br />
+              Defend the Network
+            </h1>
                 <button disabled={isStartButtonDisabled} className="leaderboard-button" onClick={() => setIsLeaderboardOpen(true)}>
                   Leaderboard
                 </button>

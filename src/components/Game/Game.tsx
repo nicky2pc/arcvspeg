@@ -1098,7 +1098,7 @@ const Game = () => {
           <>
             <div className="bg">
             <h1 className='total-score h1'>
-              ARC Defence <br />
+              ARC Defense <br />
               Defend the Network
             </h1>
                 <button disabled={isStartButtonDisabled} className="leaderboard-button" onClick={() => setIsLeaderboardOpen(true)}>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { LeaderboardRecord, LeaderboardPopupProps, ApiError } from '../../types.ts';
+import { LeaderboardRecord, LeaderboardPopupProps } from '../../types.ts';
 import { useWallets, usePrivy } from '@privy-io/react-auth';
 
 const LeaderboardPopup: React.FC<LeaderboardPopupProps> = ({ isOpen, onClose }) => {
@@ -9,64 +9,42 @@ const LeaderboardPopup: React.FC<LeaderboardPopupProps> = ({ isOpen, onClose }) 
   const [guestErrorMessage, setGuestErrorMessage] = useState<string | null>(null);
   const [authErrorMessage, setAuthErrorMessage] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'auth' | 'guest'>('auth');
-  const [copiedId, setCopiedId] = useState<string | null>(null);
+
   const { wallets } = useWallets();
   const { authenticated } = usePrivy();
-  const userId = localStorage.getItem("guestId") || "Unknown";
-  const userAddress = wallets.find((wallet) => wallet.walletClientType === 'privy')?.address;
+
   const fetchAllLeaderboards = async () => {
     setIsLoading(true);
     setGuestErrorMessage(null);
     setAuthErrorMessage(null);
-    
+
     try {
       const guestData = await import('../../game/utils.ts').then(m => m.getLeaderBoard());
       setGuestLeaderboardData(guestData);
     } catch (error) {
-      if (error instanceof Error) {
-        setGuestErrorMessage(error.message);
-      } else if (typeof error === 'object' && error !== null) {
-        const apiError = error as ApiError;
-        setGuestErrorMessage(apiError.detail);
-      } else {
-        setGuestErrorMessage("Unknown error");
-      }
+      setGuestErrorMessage(error instanceof Error ? error.message : "Unknown error");
     }
-    
+
     try {
       const authData = await import('../../game/utils.ts').then(m => m.getAuthLeaderBoard());
       setAuthLeaderboardData(authData);
     } catch (error) {
-      if (error instanceof Error) {
-        setAuthErrorMessage(error.message);
-      } else if (typeof error === 'object' && error !== null) {
-        const apiError = error as ApiError;
-        setAuthErrorMessage(apiError.detail);
-      } else {
-        setAuthErrorMessage("Unknown error");
-      }
+      setAuthErrorMessage(error instanceof Error ? error.message : "Unknown error");
     }
-    
+
     setIsLoading(false);
   };
 
   const fetchActiveLeaderboard = async () => {
     setIsLoading(true);
-    
+
     if (activeTab === 'auth') {
       setAuthErrorMessage(null);
       try {
         const data = await import('../../game/utils.ts').then(m => m.getAuthLeaderBoard());
         setAuthLeaderboardData(data);
       } catch (error) {
-        if (error instanceof Error) {
-          setAuthErrorMessage(error.message);
-        } else if (typeof error === 'object' && error !== null) {
-          const apiError = error as ApiError;
-          setAuthErrorMessage(apiError.detail);
-        } else {
-          setAuthErrorMessage("Unknown error");
-        }
+        setAuthErrorMessage(error instanceof Error ? error.message : "Unknown error");
       }
     } else {
       setGuestErrorMessage(null);
@@ -74,152 +52,120 @@ const LeaderboardPopup: React.FC<LeaderboardPopupProps> = ({ isOpen, onClose }) 
         const data = await import('../../game/utils.ts').then(m => m.getLeaderBoard());
         setGuestLeaderboardData(data);
       } catch (error) {
-        if (error instanceof Error) {
-          setGuestErrorMessage(error.message);
-        } else if (typeof error === 'object' && error !== null) {
-          const apiError = error as ApiError;
-          setGuestErrorMessage(apiError.detail);
-        } else {
-          setGuestErrorMessage("Unknown error");
-        }
+        setGuestErrorMessage(error instanceof Error ? error.message : "Unknown error");
       }
     }
-    
+
     setIsLoading(false);
   };
+
   useEffect(() => {
     if (!authenticated) {
       setActiveTab('guest');
     } else {
       setActiveTab('auth');
     }
-  }, [authenticated])
+  }, [authenticated]);
 
   useEffect(() => {
-   
     if (isOpen) {
       fetchAllLeaderboards();
     }
   }, [isOpen]);
 
-  const handleCopyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text)
-      .then(() => {
-        setCopiedId(text);
-        setTimeout(() => setCopiedId(null), 2000); 
-      })
-      .catch(err => {
-        console.error('Error copying text: ', err);
-      });
-  };
-
   if (!isOpen) return null;
 
   const currentLeaderboardData = activeTab === 'auth' ? authLeaderboardData : guestLeaderboardData;
   const currentErrorMessage = activeTab === 'auth' ? authErrorMessage : guestErrorMessage;
-
-  const columnCount = activeTab === 'auth' ? 6 : 4;
+  const columnCount = activeTab === 'auth' ? 4 : 3;
 
   return (
     <div className="popup-overlay">
-      <div className="popup-content" >
+      <div className="popup-content">
         <div className="popup-header">
           <h2>Leaderboard</h2>
-        
-          <button className="close-button" onClick={onClose}>
-            ✕
-          </button>
+          <button className="close-button" onClick={onClose}>✕</button>
         </div>
-        
+
         <div className="tabs">
-          <button 
-            className={`tab-button ${activeTab === 'auth' ? 'active' : ''}`} 
+          <button
+            className={`tab-button ${activeTab === 'auth' ? 'active' : ''}`}
             onClick={() => setActiveTab('auth')}
           >
             Authorized players
           </button>
-          <button 
-            className={`tab-button ${activeTab === 'guest' ? 'active' : ''}`} 
+          <button
+            className={`tab-button ${activeTab === 'guest' ? 'active' : ''}`}
             onClick={() => setActiveTab('guest')}
           >
             Guests
           </button>
         </div>
-        
+
         <div className="table-wrapper" style={{ maxHeight: '700px', overflowY: 'auto' }}>
           <table className="transactions-table" style={{ width: '100%', tableLayout: 'fixed' }}>
             <thead>
               <tr>
-                <th style={{ width: '5%' }}>Place</th>
-                {
-                  activeTab === 'auth' ? (
-                    <th style={{ width: '20%' }}>Username/Wallet</th>
-                  ) : (
-                    <th style={{ width: '25%' }}>Player ID</th>
-                  )
-                }
-                        {
-                  activeTab === 'auth' && (
-                <th style={{ width: '10%' }}>Top Score</th>
-              )
-            }
-        
-                    <th style={{ width: '15%' }}>Total Score</th>
-                  
-                <th style={{ width: activeTab === 'auth' ? '50%' : '45%' }}>Date</th>
+                <th style={{ width: '10%' }}>Place</th>
+                <th style={{ width: activeTab === 'auth' ? '40%' : '50%' }}>
+                  {activeTab === 'auth' ? 'Username / Wallet' : 'Player ID'}
+                </th>
+                {activeTab === 'auth' && <th style={{ width: '20%' }}>Top Score</th>}
+                <th style={{ width: activeTab === 'auth' ? '30%' : '40%' }}>
+                  {activeTab === 'auth' ? 'Total Score' : 'Score'}
+                </th>
               </tr>
             </thead>
             <tbody>
               {currentLeaderboardData.map((record, index) => {
-                let playerId;
-                let updatedAt = record.updated_at;
-                if ( activeTab === 'auth' ) {
-                  playerId = record.address;
+                const place = index + 1;
+
+                // Основнойスコア для правой колонки
+                const displayScore = record.total_score ?? record.score ?? 0;
+
+                // Отображение игрока
+                let playerDisplay;
+                if (activeTab === 'auth') {
+                  if (record.username) {
+                    playerDisplay = record.username.startsWith('@') ? (
+                      <a href={`https://x.com/${record.username.substring(1)}`} target="_blank" rel="noopener noreferrer">
+                        {record.username}
+                      </a>
+                    ) : record.username;
+                  } else {
+                    const shortAddr = record.address
+                      ? `${record.address.slice(0, 6)}...${record.address.slice(-4)}`
+                      : 'Unknown';
+                    playerDisplay = shortAddr;
+                  }
                 } else {
-                  playerId = record.id;
+                  // Guest
+                  playerDisplay = record.id ?? 'Unknown';
                 }
+
                 return (
                   <tr key={index}>
-                    <td>{index + 1}</td>
-                    {
-                      activeTab === 'auth' ? (
-                        <td style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                          {record.username ? (
-                            record.username.startsWith('@') ? (
-                              <a href={`https://x.com/${record.username.substring(1)}`} target="_blank" rel="noopener noreferrer">
-                                {record.username}
-                              </a>
-                            ) : (
-                              record.username
-                            )
-                          ) : record.wallet ? record.wallet.slice(0, 6) + "..." + record.wallet.slice(-3) : "Unknown"}
-                        </td>
-                      ) : (
-                        <td style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{(userId === playerId || userAddress === playerId) ? "You!🏆" : playerId}</td>
-                      )
-                    }
-                    {
-                      activeTab === 'auth' && (
-                        <td>{record.record_score}</td>
-                      )
-                    }
-                    <td>{record.total_score}</td>
+                    <td>{place}</td>
                     <td style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                      {updatedAt ? new Date(updatedAt).toLocaleString() : "Not processed"}
+                      {playerDisplay}
                     </td>
+                    {activeTab === 'auth' && <td>{record.score ?? '-'}</td>}
+                    <td>{displayScore}</td>
                   </tr>
-                )
+                );
               })}
+
               {currentLeaderboardData.length === 0 && !isLoading && (
                 <tr>
-                  <td colSpan={columnCount} style={{ textAlign: 'center', width: '100%' }}>
+                  <td colSpan={columnCount} style={{ textAlign: 'center' }}>
                     {currentErrorMessage || "No players to display"}
                   </td>
                 </tr>
               )}
+
               {isLoading && (
                 <tr>
-                  <td colSpan={columnCount} style={{ textAlign: 'center', width: '100%' }}>
+                  <td colSpan={columnCount} style={{ textAlign: 'center' }}>
                     Loading leaderboard...
                   </td>
                 </tr>
@@ -227,6 +173,7 @@ const LeaderboardPopup: React.FC<LeaderboardPopupProps> = ({ isOpen, onClose }) 
             </tbody>
           </table>
         </div>
+
         <button className="refresh-button" onClick={fetchActiveLeaderboard} disabled={isLoading}>
           {isLoading ? 'Loading...' : 'Refresh'}
         </button>
@@ -235,4 +182,4 @@ const LeaderboardPopup: React.FC<LeaderboardPopupProps> = ({ isOpen, onClose }) 
   );
 };
 
-export default LeaderboardPopup; 
+export default LeaderboardPopup;
